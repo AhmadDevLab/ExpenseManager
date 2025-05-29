@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,17 @@ import {
   PanGestureHandler,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/Ionicons'; // or any icon lib you use
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const {width} = Dimensions.get('window');
 
 const WeekSlider = ({onDateChange}) => {
   const [startDate, setStartDate] = useState(dayjs().startOf('week'));
   const [selectedDate, setSelectedDate] = useState(dayjs());
+
+  useEffect(() => {
+    onDateChange?.(dayjs().format('YYYY-MM-DD'));
+  }, []);
 
   const getWeekDates = useCallback(() => {
     return Array.from({length: 7}, (_, i) => startDate.add(i, 'day'));
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   selected: {
-       backgroundColor: '#2a9d8f',
+    backgroundColor: '#2a9d8f',
   },
   dayText: {
     fontSize: 12,

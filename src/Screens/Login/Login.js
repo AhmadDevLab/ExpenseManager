@@ -9,8 +9,11 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationStrings from '../../constants/NavigationStrings';
+import firestore from '@react-native-firebase/firestore';
+
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -28,15 +31,28 @@ const Login = ({navigation}) => {
         password,
       );
       const userId = userCredential.user.uid;
-      await AsyncStorage.setItem('userId', userId);
-      ToastAndroid.show('Login Successfull', ToastAndroid.SHORT);
 
+      const fcmToken = await messaging().getToken();
+      console.log('FCM Token:', fcmToken);
+
+      await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('fcmToken', fcmToken);
+
+      await firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('userInfo')
+        .doc('fcmTokenDoc') 
+        .set({fcmToken});
+
+      ToastAndroid.show('Login Successful', ToastAndroid.SHORT);
       navigation.replace(NavigationStrings.BOTTOMSTACK);
     } catch (error) {
       console.log(error);
       ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
     }
   };
+  
 
   return (
     <View style={styles.container}>

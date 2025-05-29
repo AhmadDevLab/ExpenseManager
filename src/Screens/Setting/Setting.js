@@ -12,6 +12,10 @@ const Setting = ({navigation}) => {
   const addCategory = () => {
     navigation.navigate(NavigationStrings.ADDCATEGORY);
   };
+
+  const selectCurrency = () => {
+    navigation.navigate(NavigationStrings.SELECTCURRENCY);
+  };
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('userId');
@@ -37,6 +41,12 @@ const Setting = ({navigation}) => {
         style={styles.btnAddCatrgory}
         onPress={() => addCategory()}>
         <Text style={styles.tvAddCategory}>Add Category</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.btnAddCatrgory}
+        onPress={() => selectCurrency()}>
+        <Text style={styles.tvAddCategory}>Select Currency</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.btnAddCatrgory}>

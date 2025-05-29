@@ -11,6 +11,8 @@ import colors from '../../constants/colors';
 import DropdownComponent from '../../Components/DropdownComponent';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from 'dayjs';
+
 
 const Add = () => {
   const [typeValue, setTypeValue] = useState(null);
@@ -24,25 +26,44 @@ const Add = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const snapshot = await firestore().collection('categories').get();
-        const categories = snapshot.docs.map(doc => {
+        const id = await AsyncStorage.getItem('userId');
+        if (!id) return;
+
+        setUserId(id);
+
+        // Fetch default categories
+        const defaultSnap = await firestore().collection('categories').get();
+        const defaultCategories = defaultSnap.docs.map(doc => {
           const data = doc.data();
           return {
-            label: data.name || data.label || 'Unnamed', 
-            value: data.id || data.value || doc.id,
+            label: data.label || data.name || 'Unnamed',
+            value: data.value || data.id || doc.id,
           };
         });
-        setCategoryItems(categories);
+
+        // Fetch user custom categories
+        const customSnap = await firestore()
+          .collection('users')
+          .doc(id)
+          .collection('customCategories')
+          .get();
+
+        const customCategories = customSnap.docs.map(doc => {
+          const data = doc.data();
+          return {
+            label: data.label || 'Unnamed',
+            value: data.value || doc.id,
+          };
+        });
+
+        // Combine both
+        setCategoryItems([...defaultCategories, ...customCategories]);
       } catch (error) {
         console.log('Error fetching categories:', error);
       }
     };
 
     fetchCategories();
-
-    AsyncStorage.getItem('userId').then(id => {
-      if (id) setUserId(id);
-    });
   }, []);
 
   const typeItems = [
@@ -51,6 +72,8 @@ const Add = () => {
   ];
 
   const handleAddExpense = async () => {
+    const todayDate = dayjs().format('YYYY-MM-DD'); // e.g. 2025-05-28
+
     if (!typeValue || !categoryValue || !amount) {
       Alert.alert('Please fill type, category and amount');
       return;
@@ -73,6 +96,7 @@ const Add = () => {
         amount: parseFloat(amount),
         description: description.trim() || '',
         createdAt: firestore.FieldValue.serverTimestamp(),
+        date: todayDate,
       });
 
       Alert.alert('Expense added successfully');

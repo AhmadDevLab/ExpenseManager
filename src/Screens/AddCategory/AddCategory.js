@@ -31,13 +31,16 @@ const AddCategory = () => {
       return;
     }
 
+    const trimmedCategory = categoryName.trim();
+
     try {
       await firestore()
         .collection('users')
         .doc(userId)
         .collection('customCategories')
         .add({
-          name: categoryName.trim(),
+          label: trimmedCategory,
+          value: trimmedCategory,
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
 
@@ -48,6 +51,7 @@ const AddCategory = () => {
       Alert.alert('Error adding category');
     }
   };
+  
 
   return (
     <View style={styles.container}>

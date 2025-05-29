@@ -8,6 +8,7 @@ const NavigationStrings = {
   HOME: 'Home',
   ADD: 'Add',
   ADDCATEGORY: 'AddCategory',
+  SELECTCURRENCY: 'SelectCurrency',
   REPORT: 'Report',
   SETTING: 'Setting',
   CURRENCYSELECTION: 'CurrencySelection',
