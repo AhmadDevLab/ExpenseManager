@@ -13,7 +13,8 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationStrings from '../../constants/NavigationStrings';
 import firestore from '@react-native-firebase/firestore';
-
+import fonts from '../../constants/fonts';
+import colors from '../../constants/colors';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -42,7 +43,7 @@ const Login = ({navigation}) => {
         .collection('users')
         .doc(userId)
         .collection('userInfo')
-        .doc('fcmTokenDoc') 
+        .doc('fcmTokenDoc')
         .set({fcmToken});
 
       ToastAndroid.show('Login Successful', ToastAndroid.SHORT);
@@ -52,37 +53,43 @@ const Login = ({navigation}) => {
       ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
     }
   };
-  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Login</Text>
+      <View>
+        <Text style={styles.header}>Login</Text>
 
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholderTextColor={colors.etTextPrimarycolor}
+        />
 
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <TextInput
+          placeholder="Password"
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholderTextColor={colors.etTextPrimarycolor}
+        />
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginText}>Login</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginText}>Login</Text>
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate(NavigationStrings.SIGNUP)}>
-        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
-      </TouchableOpacity>
+      <View style={styles.tvSignUpContainer}>
+        <Text>Don't have an account? </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(NavigationStrings.SIGNUP)}>
+          <Text style={styles.signupText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -93,18 +100,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.bgPrimary,
+    justifyContent: 'space-between',
   },
   header: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: fonts.SplineSansBold,
     marginBottom: 30,
     textAlign: 'center',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: colors.etPrimarycolor,
     borderRadius: 8,
     marginBottom: 15,
     paddingHorizontal: 10,
@@ -112,20 +118,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   loginButton: {
-    backgroundColor: '#2a9d8f',
-    padding: 14,
-    borderRadius: 8,
+    backgroundColor: colors.primary,
+    padding: 12,
+    borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
   },
   loginText: {
-    color: '#fff',
+    color: colors.textPrimary,
     fontSize: 16,
     fontWeight: 'bold',
   },
   signupText: {
-    color: '#2a9d8f',
+    color: colors.textPrimary,
     textAlign: 'center',
     fontSize: 14,
+  },
+  tvSignUpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

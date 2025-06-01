@@ -4,15 +4,17 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WeekSlider from '../../Components/WeekSlider';
 import NavigationStrings from '../../constants/NavigationStrings';
-import colors from '../../constants/colors';
 import {CurrencyContext} from '../../context/CurrencyContext';
 import {useFocusEffect} from '@react-navigation/native';
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 
 import {
   requestUserPermission,
   NotificationListener,
 } from '../../utils/NotificationService';
+import styles from './styles';
+import {IcBackHome, IcBalance, IcExpense, IcIncome} from '../../assets/icons';
+import fonts from '../../constants/fonts';
 
 const Home = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState(
@@ -22,7 +24,7 @@ const Home = ({navigation}) => {
   const [expense, setExpense] = useState(0);
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const { currency } = useContext(CurrencyContext); // ✅ use global context
+  const {currency} = useContext(CurrencyContext);
   useEffect(() => {
     const initNotifications = async () => {
       const permissionGranted = await requestUserPermission();
@@ -85,15 +87,22 @@ const Home = ({navigation}) => {
     navigation.navigate(NavigationStrings.ADD);
   };
 
-  const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.category}>{item.category}</Text>
-      <Text style={styles.amount}>
-        {currency} {parseFloat(item.amount).toFixed(2)}
-      </Text>
-    </View>
-  );
+  const renderItem = ({item}) => {
+    const formattedAmount =
+      item.type === 'income'
+        ? `+ ${currency} ${parseFloat(item.amount).toFixed(2)}`
+        : `- ${currency} ${parseFloat(item.amount).toFixed(2)}`;
+
+    return (
+      <View style={styles.itemContainer}>
+        <View>
+          <Text style={styles.date}>{item.date}</Text>
+          <Text style={styles.category}>{item.category}</Text>
+        </View>
+        <Text style={styles.amount}>{formattedAmount}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -103,16 +112,39 @@ const Home = ({navigation}) => {
 
       <View style={styles.downContainer}>
         <View style={styles.expenseContainer}>
-          <Text style={styles.textRed}>
-            Expenses: {currency} {expense.toFixed(2)}
-          </Text>
-          <Text style={styles.textGreen}>
-            Balance: {currency} {balance.toFixed(2)}
-          </Text>
-          <Text style={styles.textBlue}>
-            Income: {currency} {income.toFixed(2)}
-          </Text>
+          <View style={styles.expensesContainer}>
+            <IcBalance />
+            <Text style={styles.textGreen}>
+              {currency} {balance.toFixed(2)}
+            </Text>
+            <Text style={styles.tvExpenses}> Balance</Text>
+          </View>
+          <View style={styles.expensesContainer}>
+            <IcIncome />
+            <Text style={styles.textBlue}>
+              {currency} {income.toFixed(2)}
+            </Text>
+            <Text style={styles.tvExpenses}>Income</Text>
+          </View>
+          <View style={styles.expensesContainer}>
+            <IcExpense />
+            <Text style={styles.textRed}>
+              {currency} {expense.toFixed(2)}
+            </Text>
+            <Text style={styles.tvExpenses}>Expenses</Text>
+          </View>
         </View>
+
+        <Text
+          style={{
+            marginLeft: 15,
+            fontFamily: fonts.SplineSansBold,
+            marginBottom: 5,
+            marginTop: 10,
+            fontSize: 16,
+          }}>
+          Expense List
+        </Text>
 
         <FlatList
           data={transactions}
@@ -122,67 +154,11 @@ const Home = ({navigation}) => {
         />
 
         <TouchableOpacity onPress={onAddClick} style={styles.addButton}>
-          <Text style={{color: 'white', fontSize: 30}}>+</Text>
+          <Text style={{color: 'black', fontSize: 30}}>+</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-
-  topContainer: {
-    flex: 0.2,
-  },
-  downContainer: {
-    flex: 0.7,
-  },
-  addButton: {
-    backgroundColor: colors.primaryDark,
-    height: 60,
-    width: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 30,
-    alignSelf: 'flex-end',
-    marginRight: 20,
-  },
-  expenseContainer: {
-    borderWidth: 1,
-    borderColor: colors.primaryDark,
-    padding: 20,
-    marginHorizontal: 10,
-    borderRadius: 10,
-  },
-  textRed: {color: 'red'},
-  textGreen: {color: 'green'},
-  textBlue: {color: 'blue'},
-  label: {
-    marginHorizontal: 15,
-    fontWeight: '600',
-    marginTop: 10,
-  },
-  itemContainer: {
-    padding: 15,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    marginVertical: 6,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  category: {
-    color: '#777',
-    fontSize: 14,
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: '500',
-    alignSelf: 'flex-end',
-    color: '#444',
-  },
-});
 
 export default Home;

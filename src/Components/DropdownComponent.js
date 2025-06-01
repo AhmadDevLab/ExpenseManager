@@ -10,7 +10,7 @@ const DropdownComponent = ({data, showSearch, placeholder, onChangeValue}) => {
   const renderLabel = () => {
     if (value || isFocus) {
       return (
-        <Text style={[styles.label, isFocus && {color: 'blue'}]}>
+        <Text style={[styles.label, isFocus && {color: 'black'}]}>
           {placeholder}
         </Text>
       );
@@ -22,7 +22,12 @@ const DropdownComponent = ({data, showSearch, placeholder, onChangeValue}) => {
     <View style={styles.wrapper}>
       {renderLabel()}
       <Dropdown
-        style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+        style={[
+          styles.dropdown,
+          isFocus && {
+            borderColor: colors.textPrimary,
+          },
+        ]}
         data={data}
         maxHeight={300}
         labelField="label"

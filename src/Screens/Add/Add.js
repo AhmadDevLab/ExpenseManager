@@ -12,9 +12,11 @@ import DropdownComponent from '../../Components/DropdownComponent';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
+import fonts from '../../constants/fonts';
+import {IcBack, IcCancel, IcClose} from '../../assets/icons';
+import NavigationStrings from '../../constants/NavigationStrings';
 
-
-const Add = () => {
+const Add = ({navigation}) => {
   const [typeValue, setTypeValue] = useState(null);
   const [categoryValue, setCategoryValue] = useState(null);
 
@@ -71,8 +73,12 @@ const Add = () => {
     {label: 'Income', value: 'income'},
   ];
 
+  const onBackPress = () => {
+    navigation.replace(NavigationStrings.BOTTOMSTACK);
+  };
+
   const handleAddExpense = async () => {
-    const todayDate = dayjs().format('YYYY-MM-DD'); // e.g. 2025-05-28
+    const todayDate = dayjs().format('YYYY-MM-DD');
 
     if (!typeValue || !categoryValue || !amount) {
       Alert.alert('Please fill type, category and amount');
@@ -113,12 +119,19 @@ const Add = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <TouchableOpacity onPress={() => onBackPress()}>
+          <IcCancel />
+        </TouchableOpacity>
+        <Text style={styles.title}>Add Expense</Text>
+      </View>
+
       <DropdownComponent
         data={typeItems}
         showSearch={false}
         placeholder="Select Type"
         onChangeValue={setTypeValue}
-        value={typeValue} // pass selected value to keep dropdown synced
+        value={typeValue}
       />
 
       <DropdownComponent
@@ -126,7 +139,7 @@ const Add = () => {
         showSearch={true}
         placeholder="Select Category"
         onChangeValue={setCategoryValue}
-        value={categoryValue} // pass selected value to keep dropdown synced
+        value={categoryValue}
       />
 
       <TextInput
@@ -134,6 +147,7 @@ const Add = () => {
         placeholder="Enter Amount"
         keyboardType="numeric"
         value={amount}
+        placeholderTextColor={colors.textPrimary}
         onChangeText={value => setAmount(value)}
       />
 
@@ -141,6 +155,7 @@ const Add = () => {
         style={styles.etAmount}
         placeholder="Enter Description (Optional)"
         value={description}
+        placeholderTextColor={colors.textPrimary}
         onChangeText={value => setDescription(value)}
       />
 
@@ -156,16 +171,29 @@ export default Add;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    marginTop: 50,
+    backgroundColor: colors.bgPrimary,
+    paddingHorizontal: 15,
   },
   etAmount: {
-    borderWidth: 1,
     borderColor: 'black',
     borderRadius: 10,
     marginTop: 10,
     paddingHorizontal: 12,
     height: 50,
+    backgroundColor: colors.etPrimarycolor,
+  },
+  topContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1,
   },
   btnAddExpense: {
     padding: 12,
@@ -175,6 +203,8 @@ const styles = StyleSheet.create({
   },
   tvAddExpense: {
     textAlign: 'center',
-    color: colors.white,
+    color: colors.black,
+    fontFamily: fonts.SplineSansBold,
+    fontSize: 12,
   },
 });

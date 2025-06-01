@@ -1,9 +1,11 @@
 const colors = {
-  primary: '#0E1F2F',
+  primary: '#F7F505',
   primaryLight: '#1E344B',
   primaryDark: '#081421',
+  bgPrimary: '#fff',
 
-  primary_color: '#0E1F2F',
+  etPrimarycolor: '#F5F5F0',
+  etTextPrimarycolor: '#8C8C5E',
   white: '#fff',
   black: '#000',
   bgColor: '#F9FAFB',
@@ -12,7 +14,7 @@ const colors = {
   accentLight: '#A9CFFF',
   accentDark: '#3078E0',
 
-  textPrimary: '#1C1B1F',
+  textPrimary: '#171712',
   textSecondary: '#AAAAAA',
   textDisabled: '#888888',
 

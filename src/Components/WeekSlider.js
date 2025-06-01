@@ -12,6 +12,16 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  IcBack,
+  IcBackHome,
+  icBackHome,
+  IcNextHome,
+  icNextHome,
+} from '../assets/icons';
+import colors from '../constants/colors';
+
+icNextHome;
 
 const {width} = Dimensions.get('window');
 
@@ -51,11 +61,11 @@ const WeekSlider = ({onDateChange}) => {
         {/* Month with arrows */}
         <View style={styles.headerRow}>
           <TouchableOpacity onPress={() => slideWeek('right')}>
-            <Icon name="chevron-back" size={24} color="#333" />
+            <IcBackHome name="chevron-back" size={24} color="#333" />
           </TouchableOpacity>
           <Text style={styles.month}>{startDate.format('MMMM YYYY')}</Text>
           <TouchableOpacity onPress={() => slideWeek('left')}>
-            <Icon name="chevron-forward" size={24} color="#333" />
+            <IcNextHome name="chevron-forward" size={24} color="#333" />
           </TouchableOpacity>
         </View>
 
@@ -97,7 +107,7 @@ const WeekSlider = ({onDateChange}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.bgColor,
     elevation: 4,
     paddingVertical: 10,
   },
@@ -124,11 +134,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   today: {
-    borderColor: '#2a9d8f',
+    borderColor: colors.black,
     borderWidth: 1,
   },
   selected: {
-    backgroundColor: '#2a9d8f',
+    backgroundColor: colors.primary,
   },
   dayText: {
     fontSize: 12,
@@ -140,7 +150,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   selectedText: {
-    color: '#fff',
+    color: colors.black,
   },
 });
 

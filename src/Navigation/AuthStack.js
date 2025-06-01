@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Add, Login, SignUp, Splash} from '../Screens';
+import {Add, Login, Setting, SignUp, Splash} from '../Screens';
 import NavigationStrings from '../constants/NavigationStrings';
 import BootomStack from './BootomStack';
 import AddCategory from '../Screens/AddCategory/AddCategory';
@@ -32,6 +32,10 @@ const AuthStack = () => {
           <Stack.Screen
             component={SelectCurrency}
             name={NavigationStrings.SELECTCURRENCY}
+          />
+          <Stack.Screen
+            component={Setting}
+            name={NavigationStrings.SETTING}
           />
         </Stack.Navigator>
       </NavigationContainer>
